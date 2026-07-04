@@ -4,22 +4,23 @@
 
 Built with Streamlit + SQLite.
 
-> **This is the `rag-anthropic` branch** — Ask the File runs as live retrieval-augmented
-> generation through Claude and expects an `ANTHROPIC_API_KEY`. Everything else
-> (pipeline, rules, Ring Watch, evals) still runs offline. For the zero-key demo, use `main`.
+> **This is the `rag-groq` branch** — Ask the File runs as live retrieval-augmented
+> generation through a Groq-hosted LLM and expects a `GROQ_API_KEY` (free tier at
+> console.groq.com). Everything else (pipeline, rules, Ring Watch, evals) still runs
+> offline. For the zero-key demo, use `main`.
 
 ## Branches
 
 | Branch | Q&A path | Keys |
 |---|---|---|
 | `main` | Offline demo: cached answers + extractive evidence | none |
-| `rag-anthropic` | Live RAG: hybrid retrieval → Claude synthesis with inline `[seg_id]` citations | `ANTHROPIC_API_KEY` |
+| `rag-groq` | Live RAG: hybrid retrieval → LLM synthesis (Groq) with inline `[seg_id]` citations | `GROQ_API_KEY` |
 
 ## Quickstart
 
 ```bash
 pip install -r requirements.txt
-cp .env.example .env        # add your ANTHROPIC_API_KEY
+cp .env.example .env        # add your GROQ_API_KEY
 streamlit run app.py
 ```
 
@@ -45,7 +46,7 @@ Builds the applicant profile: bank-derived income vs stated income, existing EMI
 Rules score files one at a time; fraud rings operate across files. Shared phones, employers, or accounts between unrelated applications route every linked file to the fraud desk — including files that look individually approvable. In the demo portfolio, one linked file passes rules with only a minor LTV exception; the linkage is the only thing that catches it.
 
 **Ask the File** — `core/chat.py`
-Retrieval-augmented generation over the applicant's documents plus the policy corpus. Retrieval is hybrid: from-scratch Okapi BM25 fused with dense embeddings via Reciprocal Rank Fusion (when an embedding key exists). The top-8 segments — and only those — are handed to Claude, which answers with inline `[seg_id]` citations and admits gaps rather than inventing figures. Account/phone digits are masked in displayed snippets.
+Retrieval-augmented generation over the applicant's documents plus the policy corpus. Retrieval is hybrid: from-scratch Okapi BM25 fused with dense embeddings via Reciprocal Rank Fusion (when an embedding key exists). The top-8 segments — and only those — are handed to the LLM (`llama-3.3-70b-versatile` via Groq, configurable), which answers with inline `[seg_id]` citations and admits gaps rather than inventing figures. Account/phone digits are masked in displayed snippets.
 
 **Fairness guardrail** — `core/guardrail.py`
 A hard filter, not a prompt suggestion: questions that tie religion, caste, gender, marital status, or community to a credit judgment are intercepted before retrieval, with an explanation of what the model *will* assess.
@@ -67,8 +68,8 @@ The retrieval misses are instructive: questions like "any bounced payments?" mis
 |---|---|---|
 | Extraction | Regex + lexicon + txn parser | Same, LLM-assisted classification |
 | Retrieval | BM25 + RRF | BM25 + dense embeddings + RRF |
-| Q&A | Extractive evidence only | Claude RAG, grounded in retrieved segments with inline citations |
-| Keys needed | none | `ANTHROPIC_API_KEY`, optional `OPENAI_API_KEY` |
+| Q&A | Extractive evidence only | LLM RAG (Groq), grounded in retrieved segments with inline citations |
+| Keys needed | none | `GROQ_API_KEY`, optional `OPENAI_API_KEY` |
 
 Copy `.env.example` to `.env` and add your key. Everything degrades gracefully if the API is unreachable.
 

@@ -59,6 +59,6 @@ with st.sidebar:
     from core.config import live_mode
 
     mode = "🟢 Live (LLM)" if live_mode() else "🟡 Offline demo"
-    st.caption(f"Mode: {mode} — set `ANTHROPIC_API_KEY` for live answers.")
+    st.caption(f"Mode: {mode} — set `GROQ_API_KEY` for live answers.")
 
 pages.run()

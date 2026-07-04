@@ -3,7 +3,7 @@
 import streamlit as st
 
 from core.chat import answer
-from core.config import ANTHROPIC_MODEL, live_mode
+from core.config import GROQ_MODEL, live_mode
 from core.seed import policy_corpus
 from core.store import segments_for
 from ui.common import applicant_picker, render_citations
@@ -29,14 +29,14 @@ def render():
     )
     if live_mode():
         st.info(
-            f"🔑 **Live RAG mode** ({ANTHROPIC_MODEL}) — Claude synthesizes each answer "
+            f"🔑 **Live RAG mode** ({GROQ_MODEL} via Groq) — the model synthesizes each answer "
             "from the retrieved evidence segments only, citing [seg_id] inline."
         )
     else:
         st.warning(
-            "**No `ANTHROPIC_API_KEY` found.** This branch runs Q&A as retrieval-augmented "
-            "generation — copy `.env.example` to `.env` and add your key. Until then, "
-            "answers fall back to extractive evidence."
+            "**No `GROQ_API_KEY` found.** This branch runs Q&A as retrieval-augmented "
+            "generation — copy `.env.example` to `.env` and add your key (free tier at "
+            "console.groq.com). Until then, answers fall back to extractive evidence."
         )
 
     key = f"chat_{applicant['id']}"

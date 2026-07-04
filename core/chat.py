@@ -1,20 +1,21 @@
-"""Grounded Q&A over a loan file + policy corpus — RAG branch (rag-anthropic).
+"""Grounded Q&A over a loan file + policy corpus — RAG branch (rag-groq).
 
 Every question runs a retrieval-augmented generation loop:
 
   1. the fairness guardrail screens the question (hard filter, pre-retrieval)
   2. the hybrid retriever pulls the top-k evidence segments (BM25 + RRF,
      dense embeddings joining the fusion when an OpenAI key is present)
-  3. Claude synthesizes the answer from those segments ONLY — it never sees
-     the raw file — citing [seg_id] inline and admitting gaps
+  3. a Groq-hosted LLM synthesizes the answer from those segments ONLY — it
+     never sees the raw file — citing [seg_id] inline and admitting gaps
 
-Requires ANTHROPIC_API_KEY (copy .env.example to .env). Without a key the
-module degrades to an extractive fallback so nothing crashes, but this
-branch is meant to run live; use `main` for the zero-key offline demo.
+Requires GROQ_API_KEY (copy .env.example to .env; free tier available at
+console.groq.com). Without a key the module degrades to an extractive
+fallback so nothing crashes, but this branch is meant to run live; use
+`main` for the zero-key offline demo.
 """
 
 from core import guardrail
-from core.config import ANTHROPIC_MODEL, live_mode
+from core.config import GROQ_MODEL, live_mode
 from core.retrieval import HybridRetriever
 
 _TOP_K = 8        # evidence segments handed to the model
@@ -93,20 +94,23 @@ def answer(question: str, file_segments: list[dict], policy_segments: list[dict]
 # ------------------------------------------------------------ RAG synthesis
 
 def _answer_llm(question: str, hits: list[dict]) -> str:
-    import anthropic
+    from groq import Groq
 
     evidence = "\n\n".join(f"[{s['id']}] ({s.get('category', 'file')}) {s['text']}" for s in hits)
-    client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY from the environment
-    msg = client.messages.create(
-        model=ANTHROPIC_MODEL,
+    client = Groq()  # reads GROQ_API_KEY from the environment
+    resp = client.chat.completions.create(
+        model=GROQ_MODEL,
         max_tokens=_MAX_TOKENS,
-        system=_SYSTEM,
-        messages=[{
-            "role": "user",
-            "content": f"Evidence segments:\n\n{evidence}\n\nUnderwriter's question: {question}",
-        }],
+        temperature=0.2,
+        messages=[
+            {"role": "system", "content": _SYSTEM},
+            {
+                "role": "user",
+                "content": f"Evidence segments:\n\n{evidence}\n\nUnderwriter's question: {question}",
+            },
+        ],
     )
-    return msg.content[0].text
+    return resp.choices[0].message.content
 
 
 # ------------------------------------------------------- extractive fallback
@@ -119,5 +123,5 @@ def _extractive(question: str, hits: list[dict]) -> str:
         label = s.get("category", "file")
         lines.append(f"- **[{s['id']}]** ({label}) “{_mask_pii(s['text'][:220])}…”")
     lines.append("")
-    lines.append("_This branch runs Q&A as live RAG — set `ANTHROPIC_API_KEY` in `.env` for synthesized answers over these same citations._")
+    lines.append("_This branch runs Q&A as live RAG — set `GROQ_API_KEY` in `.env` for synthesized answers over these same citations._")
     return "\n".join(lines)

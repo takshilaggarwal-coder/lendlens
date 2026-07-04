@@ -45,12 +45,12 @@ PROPOSED_RATE = 0.145  # annual, used to estimate proposed EMI
 PROPOSED_TENURE_MONTHS = 48
 
 
-# Claude model for RAG synthesis (override with ANTHROPIC_MODEL in .env)
-ANTHROPIC_MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-5")
+# Groq-hosted model for RAG synthesis (override with GROQ_MODEL in .env)
+GROQ_MODEL = os.environ.get("GROQ_MODEL", "llama-3.3-70b-versatile")
 
 
-def anthropic_key() -> str | None:
-    return os.environ.get("ANTHROPIC_API_KEY") or None
+def groq_key() -> str | None:
+    return os.environ.get("GROQ_API_KEY") or None
 
 
 def openai_key() -> str | None:
@@ -59,7 +59,7 @@ def openai_key() -> str | None:
 
 def live_mode() -> bool:
     """True when an LLM is available for generation/extraction."""
-    return anthropic_key() is not None
+    return groq_key() is not None
 
 
 def dense_available() -> bool:

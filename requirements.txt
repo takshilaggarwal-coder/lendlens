@@ -1,10 +1,10 @@
-# RAG branch (rag-anthropic) — live grounded Q&A via Claude
+# RAG branch (rag-groq) — live grounded Q&A via a Groq-hosted LLM
 streamlit>=1.36
 numpy>=1.26
 pandas>=2.0
 plotly>=5.20
 python-dotenv>=1.0
-anthropic>=0.40        # required on this branch: Claude synthesizes Q&A answers
+groq>=0.11             # required on this branch: LLM synthesis for Q&A answers
 
 # Optional — dense embeddings join the retrieval fusion when present
 # openai>=1.40
