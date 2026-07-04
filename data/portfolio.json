@@ -1,0 +1,222 @@
+{
+  "applicants": [
+    {
+      "id": "app_priya",
+      "name": "Priya Deshmukh",
+      "prefix": "pri",
+      "stated": {
+        "monthly_income": 68000,
+        "loan_amount": 450000,
+        "vehicle_price": 650000,
+        "vehicle_age_years": 4
+      },
+      "gold": {
+        "verdict": "approve",
+        "fields": {
+          "stated_income": 68000,
+          "bank_income": 67405,
+          "existing_emi_total": 3200,
+          "bounce_count": 0,
+          "tenure_months": 38,
+          "foir": 0.232,
+          "ltv": 0.692
+        }
+      },
+      "documents": "Loan application — Priya Deshmukh. Applicant is 29 years old, residing at Flat 402, Sarita Vihar Society, Kothrud, Pune since 2021. PAN and Aadhaar KYC verified at branch. Contact number 9822041876. Requested loan of ₹4,50,000 against a 2022 Maruti Baleno Zeta priced at ₹6,50,000 from AutoHub Certified Cars, Baner.\n\nThe applicant reports a take-home salary of ₹68,000 per month after deductions. Salary is credited to her Kotak account on the 5th of every month. She has no variable pay component and no rental or other secondary income declared in the application form.\n\nPriya has been employed as a senior QA engineer at Technova Solutions Pvt Ltd, Hinjewadi, for the past 38 months. HR confirmation letter dated 12-May-2026 verifies her designation and continued employment. Prior to this she worked at a startup for two years before it was acquired.\n\nOn obligations, the applicant declared one running consumer durable loan with Bajaj Finance, EMI ₹3,200 per month, eleven installments remaining. She holds one credit card with a ₹60,000 limit, statement paid in full each month per her declaration. No other borrowings were declared on the application form.\n\nVehicle details: 2022 Maruti Baleno Zeta petrol, first owner, 31,400 km on the odometer, insured until March 2027. Dealer quotation from AutoHub Certified Cars values the car at ₹6,50,000. Registration MH12 series, Pune RTO. Hypothecation to be marked after disbursal as standard.\n\nKotak Mahindra Bank — Account statement, A/c No. XX44710021, Mar–May 2026\n05-Mar-2026 | NEFT CR | SALARY TECHNOVA SOLUTIONS PVT LTD MAR | +67,380 | bal 91,220\n07-Mar-2026 | ACH D | BAJAJ FIN EMI 04421 | -3,200 | bal 88,020\n09-Mar-2026 | UPI | RENT SARITA VIHAR OWNER | -18,000 | bal 70,020\n14-Mar-2026 | UPI | DMART GROCERY | -4,310 | bal 65,710\n22-Mar-2026 | IMPS | TRF TO MUTUAL FUND SIP | -10,000 | bal 55,710\n05-Apr-2026 | NEFT CR | SALARY TECHNOVA SOLUTIONS PVT LTD APR | +67,380 | bal 123,090\n07-Apr-2026 | ACH D | BAJAJ FIN EMI 04421 | -3,200 | bal 119,890\n09-Apr-2026 | UPI | RENT SARITA VIHAR OWNER | -18,000 | bal 101,890\n18-Apr-2026 | UPI | ELECTRICITY MSEDCL | -2,140 | bal 99,750\n22-Apr-2026 | IMPS | TRF TO MUTUAL FUND SIP | -10,000 | bal 89,750\n05-May-2026 | NEFT CR | SALARY TECHNOVA SOLUTIONS PVT LTD MAY | +67,455 | bal 157,205\n07-May-2026 | ACH D | BAJAJ FIN EMI 04421 | -3,200 | bal 154,005\n09-May-2026 | UPI | RENT SARITA VIHAR OWNER | -18,000 | bal 136,005\n22-May-2026 | IMPS | TRF TO MUTUAL FUND SIP | -10,000 | bal 126,005",
+      "cached_answers": [
+        {
+          "question": "What is the applicant's real monthly income?",
+          "answer": "Bank credits show ₹67,380–₹67,455 from Technova Solutions across Mar–May 2026, averaging **₹67,405** — within 1% of the stated ₹68,000 take-home. Income verifies cleanly under POL-4.2.",
+          "source_contains": ["SALARY TECHNOVA", "take-home salary of ₹68,000"]
+        },
+        {
+          "question": "What existing obligations does she have?",
+          "answer": "One live obligation in banking: **Bajaj Finance consumer durable EMI ₹3,200/month** (11 installments left). The declared credit card is paid in full monthly and carries no EMI. Total existing obligations: ₹3,200.",
+          "source_contains": ["BAJAJ FIN EMI", "Bajaj Finance"]
+        },
+        {
+          "question": "What FOIR does this application carry?",
+          "answer": "Existing EMI ₹3,200 + proposed EMI ≈ ₹12,411 against bank-derived income ₹67,405 gives **FOIR ≈ 23%**, well inside the 55% ceiling in POL-5.1.",
+          "source_contains": ["POL-5.1", "BAJAJ FIN EMI"]
+        },
+        {
+          "question": "Is the loan within the LTV grid?",
+          "answer": "₹4,50,000 against a quoted ₹6,50,000 is **69% LTV**. The car is 4 years old, so the POL-6.2 cap is 80% — comfortably within grid.",
+          "source_contains": ["POL-6.2", "AutoHub Certified Cars values the car"]
+        },
+        {
+          "question": "Any red flags on this file?",
+          "answer": "No material flags: income reconciles (drift <1%), zero bounces, 38-month tenure, FOIR 23%, LTV 69%. Clean file — recommendation is approve.",
+          "source_contains": ["SALARY TECHNOVA"]
+        }
+      ],
+      "eval_questions": [
+        { "question": "What salary actually lands in the bank account each month?", "gold_contains": ["SALARY TECHNOVA", "take-home salary of ₹68,000"], "category": "banking" },
+        { "question": "What existing EMI obligations show in banking?", "gold_contains": ["BAJAJ FIN EMI", "Bajaj Finance"], "category": "obligations" },
+        { "question": "Who employs the applicant and for how long?", "gold_contains": ["Technova Solutions Pvt Ltd"], "category": "employment" },
+        { "question": "What is the maximum FOIR allowed by policy?", "gold_contains": ["POL-5.1"], "category": "policy" }
+      ]
+    },
+    {
+      "id": "app_ramesh",
+      "name": "Ramesh Gaikwad",
+      "prefix": "ram",
+      "stated": {
+        "monthly_income": 42000,
+        "loan_amount": 550000,
+        "vehicle_price": 640000,
+        "vehicle_age_years": 7
+      },
+      "gold": {
+        "verdict": "refer",
+        "fields": {
+          "stated_income": 42000,
+          "bank_income": 41200,
+          "existing_emi_total": 13900,
+          "bounce_count": 1,
+          "tenure_months": 61,
+          "foir": 0.706,
+          "ltv": 0.859
+        }
+      },
+      "documents": "Loan application — Ramesh Gaikwad, age 41, resident of Wadgaon Sheri, Pune. KYC completed with PAN and voter ID. Contact number 9860112244. Seeking ₹5,50,000 to purchase a 2019 Hyundai Creta SX diesel quoted at ₹6,40,000 by Highway Motors, Wagholi. Down payment arranged from household savings.\n\nApplicant states a take-home salary of ₹42,000 per month as fleet supervisor. Income is credited monthly into his Axis account. His wife earns from tailoring work at home but her income is not documented and is excluded from this assessment.\n\nRamesh has worked with SwiftTrans Logistics Pvt Ltd for 61 months as a delivery fleet supervisor at their Chakan hub. Employer letter dated 02-Jun-2026 confirms designation and salary. He supervises fourteen drivers across two shifts and is described as a reliable long-tenure employee.\n\nDeclared obligations include a personal loan from HDFC with EMI ₹9,800 having nineteen months left, and a two-wheeler loan with TVS Credit, EMI ₹4,100, seven months remaining. He also repaid a gold loan fully in 2024 as per his declaration to the branch officer.\n\nVehicle: 2019 Hyundai Creta SX 1.6 diesel, second owner, 78,200 km, quoted ₹6,40,000 by Highway Motors. Insurance lapsed last month and will be renewed at disbursal. Pune RTO registration, hypothecation to be endorsed in favour of the lender.\n\nAxis Bank — Account statement, A/c No. XX30981126, Mar–May 2026\n03-Mar-2026 | NEFT CR | SALARY SWIFTTRANS LOGISTICS MAR | +41,150 | bal 47,300\n05-Mar-2026 | ACH D | HDFC PERSONAL LOAN EMI 7719 | -9,800 | bal 37,500\n06-Mar-2026 | ACH D | TVS CREDIT NACH 2210 | -4,100 | bal 33,400\n15-Mar-2026 | UPI | SCHOOL FEES ST MARYS | -6,500 | bal 26,900\n27-Mar-2026 | UPI | KIRANA STORE MONTHLY | -3,850 | bal 23,050\n03-Apr-2026 | NEFT CR | SALARY SWIFTTRANS LOGISTICS APR | +41,300 | bal 64,350\n05-Apr-2026 | ACH D | HDFC PERSONAL LOAN EMI 7719 | -9,800 | bal 54,550\n06-Apr-2026 | ACH D | TVS CREDIT NACH 2210 | -4,100 | bal 50,450\n11-Apr-2026 | CHQ | ACH RTN CHG - INSUFFICIENT FUNDS | -590 | bal 49,860\n19-Apr-2026 | UPI | HOSPITAL PHARMACY | -2,760 | bal 47,100\n03-May-2026 | NEFT CR | SALARY SWIFTTRANS LOGISTICS MAY | +41,150 | bal 88,250\n05-May-2026 | ACH D | HDFC PERSONAL LOAN EMI 7719 | -9,800 | bal 78,450\n06-May-2026 | ACH D | TVS CREDIT NACH 2210 | -4,100 | bal 74,350\n21-May-2026 | UPI | MOBILE RECHARGE FAMILY | -940 | bal 73,410",
+      "cached_answers": [
+        {
+          "question": "Does the stated income verify against banking?",
+          "answer": "Yes. Salary credits of ₹41,150–₹41,300 from SwiftTrans Logistics average **₹41,200** vs stated ₹42,000 — a 1.9% drift, well inside the 25% tolerance of POL-4.2.",
+          "source_contains": ["SALARY SWIFTTRANS", "take-home salary of ₹42,000"]
+        },
+        {
+          "question": "What is the FOIR on this file?",
+          "answer": "Existing EMIs ₹13,900 (HDFC ₹9,800 + TVS ₹4,100) plus proposed EMI ≈ ₹15,168 against ₹41,200 income gives **FOIR ≈ 71%** — a high-severity breach of the 55% ceiling (POL-5.1). This is the core problem with the file.",
+          "source_contains": ["HDFC PERSONAL LOAN EMI", "POL-5.1"]
+        },
+        {
+          "question": "Is the LTV acceptable?",
+          "answer": "₹5,50,000 on a ₹6,40,000 quote is **86% LTV**; the cap for a 7-year-old vehicle is 80% (POL-6.2). Curable by reducing the sanctioned amount to ₹5,12,000.",
+          "source_contains": ["POL-6.2", "Highway Motors"]
+        },
+        {
+          "question": "Any bounces in banking conduct?",
+          "answer": "One inward return charge (Apr 2026, insufficient funds). POL-5.3 tolerates isolated single bounces; conduct is otherwise clean with regular salary credits and on-time NACH debits.",
+          "source_contains": ["RTN CHG", "POL-5.3"]
+        },
+        {
+          "question": "Why refer instead of decline?",
+          "answer": "Single high-severity breach (FOIR) with strong mitigants: 61-month tenure, verified income, near-clean conduct. Options for the credit manager: longer tenure, lower amount, or a co-applicant — each pulls FOIR under 55%. Evidence and reason codes attached per POL-9.1.",
+          "source_contains": ["SwiftTrans Logistics Pvt Ltd for 61 months", "POL-9.1"]
+        }
+      ],
+      "eval_questions": [
+        { "question": "How large are the existing monthly loan installments?", "gold_contains": ["HDFC PERSONAL LOAN EMI"], "category": "banking" },
+        { "question": "Which company does the applicant work for?", "gold_contains": ["SwiftTrans Logistics"], "category": "employment" },
+        { "question": "What is the LTV cap for older vehicles?", "gold_contains": ["POL-6.2"], "category": "policy" },
+        { "question": "Any bounced or returned payments in the statement?", "gold_contains": ["RTN CHG"], "category": "banking" }
+      ]
+    },
+    {
+      "id": "app_sunil",
+      "name": "Sunil Bhosale",
+      "prefix": "sun",
+      "stated": {
+        "monthly_income": 85000,
+        "loan_amount": 700000,
+        "vehicle_price": 780000,
+        "vehicle_age_years": 3
+      },
+      "gold": {
+        "verdict": "decline_refer_fraud",
+        "fields": {
+          "stated_income": 85000,
+          "bank_income": 60000,
+          "existing_emi_total": 7400,
+          "bounce_count": 3,
+          "tenure_months": 9,
+          "foir": 0.445,
+          "ltv": 0.897
+        }
+      },
+      "documents": "Loan application — Sunil Bhosale, age 33, address given as Rental Rowhouse 7, Moshi, Pune, occupancy eight months. PAN submitted; Aadhaar address differs from current residence. Contact number 9822011223. Requests ₹7,00,000 against a 2023 Maruti Swift ZXI quoted at ₹7,80,000 by Shreeram Motors, Bhosari.\n\nApplicant states a take-home salary of ₹85,000 per month as senior sales manager. He indicates income will rise with incentives next quarter. No secondary income declared. Salary stated to be credited by employer transfer at each month end.\n\nEmployment: applicant has been with Shreeram Motors for 9 months as senior sales manager, per a letter signed by the proprietor. Previous employment history is unverified; the letter lists the same contact number as the applicant's own. Reference given: Anil Pawar, 9970556677.\n\nDeclared obligations: one personal loan with IDFC First, EMI ₹7,400. The applicant initially omitted this loan on the form and added it only when the bank statement was requested. No credit card declared despite card-repayment entries visible in banking history.\n\nVehicle: 2023 Maruti Swift ZXI petrol, single owner demo car, 18,900 km, quoted ₹7,80,000 by Shreeram Motors, Bhosari — the applicant's own employer and the selling dealer on this same application.\n\nICICI Bank — Account statement, A/c No. XX66120945, Mar–May 2026\n01-Mar-2026 | IMPS | SALARY CR SHREERAM MOTORS | +60,000 | bal 71,450\n04-Mar-2026 | ACH D | IDFC FIRST LOAN EMI 5501 | -7,400 | bal 64,050\n08-Mar-2026 | CHQ | CHQ RETURN INWARD - INSUFFICIENT FUNDS | -350 | bal 63,700\n12-Mar-2026 | UPI | CASH DEP CDM MOSHI | +25,000 | bal 88,700\n18-Mar-2026 | UPI | CREDIT CARD PAYMENT AMEX | -21,300 | bal 67,400\n01-Apr-2026 | IMPS | SALARY CR SHREERAM MOTORS | +60,000 | bal 127,400\n04-Apr-2026 | ACH D | IDFC FIRST LOAN EMI 5501 | -7,400 | bal 120,000\n09-Apr-2026 | CHQ | CHQ RETURN INWARD - INSUFFICIENT FUNDS | -350 | bal 119,650\n15-Apr-2026 | UPI | CASH DEP CDM MOSHI | +30,000 | bal 149,650\n22-Apr-2026 | UPI | CREDIT CARD PAYMENT AMEX | -24,800 | bal 124,850\n01-May-2026 | IMPS | SALARY CR SHREERAM MOTORS | +60,000 | bal 184,850\n04-May-2026 | ACH D | IDFC FIRST LOAN EMI 5501 | -7,400 | bal 177,450\n10-May-2026 | CHQ | CHQ RETURN INWARD - INSUFFICIENT FUNDS | -350 | bal 177,100\n16-May-2026 | UPI | CASH DEP CDM MOSHI | +20,000 | bal 197,100",
+      "cached_answers": [
+        {
+          "question": "Does the stated salary match bank credits?",
+          "answer": "No. Stated take-home is ₹85,000 but salary-tagged credits are exactly **₹60,000 every month — a 29% drift**, breaching the 25% tolerance in POL-4.2. The file must be re-underwritten on ₹60,000, and the perfectly round credits are themselves a POL-7.1 fraud indicator.",
+          "source_contains": ["SALARY CR SHREERAM MOTORS", "take-home salary of ₹85,000"]
+        },
+        {
+          "question": "What fraud indicators does this file show?",
+          "answer": "Four from POL-7.1: (1) perfectly round ₹60,000 salary credits, (2) cash CDM deposits between salary cycles, (3) employer and selling dealer are the same entity — Shreeram Motors, (4) the employment letter lists the applicant's own phone number. Plus 3 cheque returns. Route to fraud desk before any credit review.",
+          "source_contains": ["POL-7.1", "CASH DEP CDM MOSHI", "signed by the proprietor"]
+        },
+        {
+          "question": "How many bounces are in the statement?",
+          "answer": "**Three inward cheque returns** for insufficient funds (Mar, Apr, May 2026) — above the 2-return limit in POL-5.3. High-severity on its own.",
+          "source_contains": ["CHQ RETURN INWARD"]
+        },
+        {
+          "question": "Is this applicant linked to any other file?",
+          "answer": "Yes — cross-file linkage: contact number **••••••1223** and employer/dealer **Shreeram Motors** both also appear in Vikram Salunkhe's application. Two shared attributes across unrelated applicants meets the POL-7.1 threshold for fraud-desk routing of both files.",
+          "source_contains": ["Contact number 9822011223", "POL-7.1"]
+        }
+      ],
+      "eval_questions": [
+        { "question": "How many cheque returns appear in the bank statement?", "gold_contains": ["CHQ RETURN INWARD"], "category": "banking" },
+        { "question": "Does the stated salary match what the bank shows?", "gold_contains": ["SALARY CR SHREERAM MOTORS", "take-home salary of ₹85,000"], "category": "income" },
+        { "question": "What are the fraud indicators policy lists?", "gold_contains": ["POL-7.1"], "category": "policy" },
+        { "question": "Who signed the employment letter?", "gold_contains": ["signed by the proprietor"], "category": "employment" }
+      ]
+    },
+    {
+      "id": "app_vikram",
+      "name": "Vikram Salunkhe",
+      "prefix": "vik",
+      "stated": {
+        "monthly_income": 55000,
+        "loan_amount": 380000,
+        "vehicle_price": 520000,
+        "vehicle_age_years": 8
+      },
+      "gold": {
+        "verdict": "decline_refer_fraud",
+        "fields": {
+          "stated_income": 55000,
+          "bank_income": 0,
+          "existing_emi_total": 0,
+          "bounce_count": 0,
+          "tenure_months": 84,
+          "foir": 0.191,
+          "ltv": 0.731
+        }
+      },
+      "documents": "Loan application — Vikram Salunkhe, age 38, running Salunkhe Enterprises, a two-bay vehicle repair workshop in Chikhali, Pune. Self-employed proprietor. Reachable on 9822011223. Seeks ₹3,80,000 for a 2018 Honda City V quoted at ₹5,20,000 in a quotation from Shreeram Motors, Bhosari.\n\nThe proprietor reports a net monthly income of ₹55,000 from the workshop after rent and two helper salaries. Business receipts arrive largely through UPI collections from repair customers. No income tax return was provided for the latest year; the prior year ITR shows ₹5.8 lakh gross receipts.\n\nVikram has operated the workshop for 7 years at the same Chikhali location, per the shop establishment certificate. He is the sole proprietor with two helpers employed. The premises are rented; the landlord confirmed occupancy since 2019 when contacted by the branch.\n\nDeclared obligations: none at present. A tractor loan taken jointly with his brother was closed in 2023. No credit cards held. The applicant states all equipment in the workshop is owned outright without hypothecation to any lender.\n\nVehicle: 2018 Honda City V petrol, 92,600 km, third owner, quoted ₹5,20,000. The quotation is issued by Shreeram Motors, Bhosari rather than a dealership near the applicant's Chikhali workshop, which the file does not explain.\n\nBank of Maharashtra — Account statement, A/c No. XX51280734, Mar–May 2026\n02-Mar-2026 | UPI | COLLECTION QR REPAIR CUSTOMERS | +38,410 | bal 52,300\n06-Mar-2026 | UPI | SPARES PURCHASE AUTOPARTS BHOSARI | -12,150 | bal 40,150\n10-Mar-2026 | UPI | COLLECTION QR REPAIR CUSTOMERS | +21,730 | bal 61,880\n15-Mar-2026 | NEFT | SHOP RENT CHIKHALI | -11,000 | bal 50,880\n24-Mar-2026 | UPI | HELPER WAGES CASH WDL | -16,000 | bal 34,880\n04-Apr-2026 | UPI | COLLECTION QR REPAIR CUSTOMERS | +44,905 | bal 79,785\n09-Apr-2026 | UPI | SPARES PURCHASE AUTOPARTS BHOSARI | -9,940 | bal 69,845\n15-Apr-2026 | NEFT | SHOP RENT CHIKHALI | -11,000 | bal 58,845\n23-Apr-2026 | UPI | HELPER WAGES CASH WDL | -16,000 | bal 42,845\n03-May-2026 | UPI | COLLECTION QR REPAIR CUSTOMERS | +51,240 | bal 94,085\n08-May-2026 | UPI | SPARES PURCHASE AUTOPARTS BHOSARI | -13,320 | bal 80,765\n15-May-2026 | NEFT | SHOP RENT CHIKHALI | -11,000 | bal 69,765\n26-May-2026 | UPI | HELPER WAGES CASH WDL | -16,000 | bal 53,765",
+      "cached_answers": [
+        {
+          "question": "How is business income verified for this file?",
+          "answer": "The latest ITR is missing, so POL-4.3 falls back to banking: UPI collections of ₹38,410–₹51,240 per month minus visible outflows (rent ₹11,000, wages ₹16,000, spares) support drawings near the stated ₹55,000 in the strongest month but not consistently. On its own this is an approve-with-conditions profile (reduced LTV or co-applicant).",
+          "source_contains": ["COLLECTION QR REPAIR CUSTOMERS", "POL-4.3"]
+        },
+        {
+          "question": "Is the LTV within grid?",
+          "answer": "₹3,80,000 on ₹5,20,000 is **73% LTV**; the cap for an 8-year-old vehicle is 70% (POL-6.2). Medium severity — curable by trimming the amount to ₹3,64,000.",
+          "source_contains": ["POL-6.2", "2018 Honda City"]
+        },
+        {
+          "question": "Why is this file routed to the fraud desk?",
+          "answer": "Cross-file linkage: his contact number **••••••1223** is identical to Sunil Bhosale's, and his vehicle quotation comes from **Shreeram Motors** — Sunil's employer and selling dealer. Two shared attributes across supposedly unrelated files triggers POL-7.1 fraud-desk routing, overriding the otherwise passable rule results.",
+          "source_contains": ["Reachable on 9822011223", "POL-7.1"]
+        },
+        {
+          "question": "What does the banking conduct look like?",
+          "answer": "Clean: no bounces, no EMI debits, steady rent and wage payments, balances ₹34,880–₹94,085. The concern on this file isn't conduct — it's the missing ITR and the cross-file linkage.",
+          "source_contains": ["SHOP RENT CHIKHALI"]
+        }
+      ],
+      "eval_questions": [
+        { "question": "How does the workshop receive its money?", "gold_contains": ["COLLECTION QR REPAIR CUSTOMERS", "UPI collections"], "category": "banking" },
+        { "question": "How long has the business operated?", "gold_contains": ["for 7 years"], "category": "employment" },
+        { "question": "Who issued the vehicle quotation?", "gold_contains": ["issued by Shreeram Motors"], "category": "vehicle" },
+        { "question": "What does policy require for self-employed income proof?", "gold_contains": ["POL-4.3"], "category": "policy" }
+      ]
+    }
+  ]
+}

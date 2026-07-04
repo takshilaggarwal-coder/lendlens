@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+lendlens.db
+lendlens.db-journal
+.env
+.streamlit/
+.DS_Store

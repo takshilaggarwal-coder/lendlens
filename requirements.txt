@@ -1,0 +1,10 @@
+# Core — offline demo mode needs only these
+streamlit>=1.36
+numpy>=1.26
+pandas>=2.0
+plotly>=5.20
+python-dotenv>=1.0
+
+# Optional — live mode (install if you have keys)
+# anthropic>=0.40      # Claude grounded answers + LLM extraction
+# openai>=1.40         # dense embeddings for hybrid retrieval
