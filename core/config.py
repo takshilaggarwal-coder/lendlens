@@ -45,6 +45,10 @@ PROPOSED_RATE = 0.145  # annual, used to estimate proposed EMI
 PROPOSED_TENURE_MONTHS = 48
 
 
+# Claude model for RAG synthesis (override with ANTHROPIC_MODEL in .env)
+ANTHROPIC_MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-5")
+
+
 def anthropic_key() -> str | None:
     return os.environ.get("ANTHROPIC_API_KEY") or None
 

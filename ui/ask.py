@@ -3,6 +3,7 @@
 import streamlit as st
 
 from core.chat import answer
+from core.config import ANTHROPIC_MODEL, live_mode
 from core.seed import policy_corpus
 from core.store import segments_for
 from ui.common import applicant_picker, render_citations
@@ -26,6 +27,17 @@ def render():
         "Every reply cites the segments it used. Protected attributes are hard-filtered "
         "out of decisioning by the fairness guardrail."
     )
+    if live_mode():
+        st.info(
+            f"🔑 **Live RAG mode** ({ANTHROPIC_MODEL}) — Claude synthesizes each answer "
+            "from the retrieved evidence segments only, citing [seg_id] inline."
+        )
+    else:
+        st.warning(
+            "**No `ANTHROPIC_API_KEY` found.** This branch runs Q&A as retrieval-augmented "
+            "generation — copy `.env.example` to `.env` and add your key. Until then, "
+            "answers fall back to extractive evidence."
+        )
 
     key = f"chat_{applicant['id']}"
     if key not in st.session_state:
@@ -54,7 +66,7 @@ def render():
         st.markdown(question)
 
     with st.chat_message("assistant"):
-        with st.spinner("Retrieving evidence…"):
+        with st.spinner("Retrieving evidence and synthesizing…" if live_mode() else "Retrieving evidence…"):
             result = answer(
                 question,
                 segments_for(applicant["id"]),

@@ -1,19 +1,35 @@
-"""Grounded Q&A over a loan file + policy corpus.
+"""Grounded Q&A over a loan file + policy corpus — RAG branch (rag-anthropic).
 
-Every answer carries citations (segment IDs + snippets). Two paths:
+Every question runs a retrieval-augmented generation loop:
 
-  live mode  — Claude answers from retrieved segments only, instructed to
-               cite [seg_id] inline and admit gaps
-  demo mode  — nearest cached answer when confident, else an extractive
-               reply built from the top retrieved segments
+  1. the fairness guardrail screens the question (hard filter, pre-retrieval)
+  2. the hybrid retriever pulls the top-k evidence segments (BM25 + RRF,
+     dense embeddings joining the fusion when an OpenAI key is present)
+  3. Claude synthesizes the answer from those segments ONLY — it never sees
+     the raw file — citing [seg_id] inline and admitting gaps
 
-Both paths run behind the fairness guardrail.
+Requires ANTHROPIC_API_KEY (copy .env.example to .env). Without a key the
+module degrades to an extractive fallback so nothing crashes, but this
+branch is meant to run live; use `main` for the zero-key offline demo.
 """
 
 from core import guardrail
-from core.config import live_mode
-from core.retrieval import BM25, HybridRetriever
-from core.store import answers_for
+from core.config import ANTHROPIC_MODEL, live_mode
+from core.retrieval import HybridRetriever
+
+_TOP_K = 8        # evidence segments handed to the model
+_MAX_TOKENS = 700  # answer budget
+
+_SYSTEM = (
+    "You are an underwriting copilot for used-car loans at a regulated NBFC. "
+    "Answer ONLY from the numbered evidence segments provided — they are the "
+    "sole source of truth. Cite segment ids inline like [seg_012] after every "
+    "claim. If the evidence does not contain the answer, say exactly what is "
+    "missing — never estimate or invent figures. Format numbers with ₹ and "
+    "Indian comma grouping. Protected attributes (religion, caste, gender, "
+    "marital status, community) must never influence any statement about "
+    "creditworthiness. Keep answers under 150 words."
+)
 
 
 def _mask_pii(text: str) -> str:
@@ -48,7 +64,7 @@ def answer(question: str, file_segments: list[dict], policy_segments: list[dict]
         }
 
     retriever = HybridRetriever(file_segments + policy_segments)
-    hits = retriever.retrieve(question, k=5)
+    hits = retriever.retrieve(question, k=_TOP_K)
 
     note = ""
     if verdict and verdict["level"] == "note":
@@ -57,36 +73,43 @@ def answer(question: str, file_segments: list[dict], policy_segments: list[dict]
             "answering on financial signals only._\n\n"
         )
 
-    if live_mode():
-        return {"text": note + _answer_llm(question, hits), "citations": _citations(hits), "mode": "live"}
-
-    cached = _nearest_cached(question, applicant_id)
-    if cached:
+    if not live_mode():
         return {
-            "text": note + cached["answer"],
-            "citations": _citations([s for s in file_segments + policy_segments if s["id"] in cached["sources"]]) or _citations(hits[:3]),
-            "mode": "cached",
+            "text": note + _extractive(question, hits),
+            "citations": _citations(hits[:3]),
+            "mode": "extractive",
         }
 
-    return {"text": note + _extractive(question, hits), "citations": _citations(hits[:3]), "mode": "extractive"}
+    try:
+        return {"text": note + _answer_llm(question, hits), "citations": _citations(hits), "mode": "live"}
+    except Exception as exc:  # degrade gracefully — never crash the UI on an API hiccup
+        fallback = (
+            f"_Live answer unavailable ({exc.__class__.__name__}) — showing retrieved evidence instead._\n\n"
+            + _extractive(question, hits)
+        )
+        return {"text": note + fallback, "citations": _citations(hits[:3]), "mode": "extractive"}
 
 
-# ------------------------------------------------------------- demo answers
+# ------------------------------------------------------------ RAG synthesis
 
-_CACHE_CONFIDENCE = 6.0  # BM25 score floor for reusing a cached answer
+def _answer_llm(question: str, hits: list[dict]) -> str:
+    import anthropic
+
+    evidence = "\n\n".join(f"[{s['id']}] ({s.get('category', 'file')}) {s['text']}" for s in hits)
+    client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY from the environment
+    msg = client.messages.create(
+        model=ANTHROPIC_MODEL,
+        max_tokens=_MAX_TOKENS,
+        system=_SYSTEM,
+        messages=[{
+            "role": "user",
+            "content": f"Evidence segments:\n\n{evidence}\n\nUnderwriter's question: {question}",
+        }],
+    )
+    return msg.content[0].text
 
 
-def _nearest_cached(question: str, applicant_id: str | None) -> dict | None:
-    if not applicant_id:
-        return None
-    cached = answers_for(applicant_id)
-    if not cached:
-        return None
-    index = BM25([c["question"] for c in cached])
-    scores = index.scores(question)
-    best = max(range(len(scores)), key=lambda i: scores[i])
-    return cached[best] if scores[best] >= _CACHE_CONFIDENCE else None
-
+# ------------------------------------------------------- extractive fallback
 
 def _extractive(question: str, hits: list[dict]) -> str:
     if not hits:
@@ -96,27 +119,5 @@ def _extractive(question: str, hits: list[dict]) -> str:
         label = s.get("category", "file")
         lines.append(f"- **[{s['id']}]** ({label}) “{_mask_pii(s['text'][:220])}…”")
     lines.append("")
-    lines.append("_Offline demo mode: showing evidence extractively. Add an `ANTHROPIC_API_KEY` for synthesized answers over these same citations._")
+    lines.append("_This branch runs Q&A as live RAG — set `ANTHROPIC_API_KEY` in `.env` for synthesized answers over these same citations._")
     return "\n".join(lines)
-
-
-# -------------------------------------------------------------- live answer
-
-def _answer_llm(question: str, hits: list[dict]) -> str:
-    import anthropic
-
-    evidence = "\n\n".join(f"[{s['id']}] ({s.get('category')}) {s['text']}" for s in hits)
-    client = anthropic.Anthropic()
-    msg = client.messages.create(
-        model="claude-sonnet-4-5",
-        max_tokens=700,
-        system=(
-            "You are an underwriting copilot for used-car loans. Answer ONLY from "
-            "the evidence segments provided. Cite segment ids inline like [seg_012] "
-            "after each claim. If the evidence doesn't contain the answer, say so "
-            "plainly — never invent figures. Keep answers under 150 words, precise, "
-            "numbers formatted with ₹ and commas."
-        ),
-        messages=[{"role": "user", "content": f"Evidence:\n{evidence}\n\nQuestion: {question}"}],
-    )
-    return msg.content[0].text
